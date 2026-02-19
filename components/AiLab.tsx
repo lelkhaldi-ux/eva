@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { Target, Zap, Activity, Brain, ShieldAlert, Cpu, Layers, ChevronLeft, Database, Activity as ActivityIcon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Target, Zap, Activity, Brain, ShieldAlert, Cpu, Layers, ChevronLeft, Database, Activity as ActivityIcon, Terminal } from 'lucide-react';
 import { magiService } from '../services/geminiService';
 
 interface AiLabProps {
@@ -17,194 +17,179 @@ const AiLab: React.FC<AiLabProps> = ({ onBack }) => {
   const [isSyncing, setIsSyncing] = useState(false);
 
   const analyzeProject = async () => {
-    if (!projectInput.trim()) return;
+    if (!projectInput.trim() || isAnalyzing) return;
     setIsAnalyzing(true);
-    const res = await magiService.queryMagi(projectInput, 'PROJECT');
-    setProjectResult(res);
-    setIsAnalyzing(false);
+    try {
+      const res = await magiService.queryMagi(projectInput, 'PROJECT');
+      setProjectResult(res);
+    } catch (err) {
+      setProjectResult("SYSTEM ERROR: UNABLE TO ACCESS PROJECT CORE.");
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   const calculateSync = async () => {
-    if (!syncInput.trim()) return;
+    if (!syncInput.trim() || isSyncing) return;
     setIsSyncing(true);
-    const res = await magiService.queryMagi(syncInput, 'SYNC');
-    setSyncResult(res);
-    setIsSyncing(false);
+    try {
+      const res = await magiService.queryMagi(syncInput, 'SYNC');
+      setSyncResult(res);
+    } catch (err) {
+      setSyncResult("SYSTEM ERROR: NEURAL FEED INTERRUPTED.");
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-6 md:p-12 relative nerv-grid">
-      {/* Background HUD Elements */}
-      <div className="fixed inset-0 pointer-events-none opacity-5">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,107,0,0.1)_0%,transparent_70%)]"></div>
-      </div>
-
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 border-b border-eva-orange/30 pb-6 gap-6 relative z-10">
+    <div className="min-h-screen bg-black text-white p-6 md:p-12 relative flex flex-col font-mono">
+      {/* HUD Background Decorations */}
+      <div className="fixed inset-0 pointer-events-none opacity-5 nerv-grid"></div>
+      
+      {/* Header Bar */}
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 border-b border-eva-orange pb-6 gap-6 relative z-10">
         <div className="flex items-center gap-6">
           <button 
             onClick={onBack}
-            className="p-3 border border-eva-orange hover:bg-eva-orange/20 transition-all text-eva-orange shadow-[0_0_15px_rgba(255,107,0,0.2)]"
+            className="p-3 border border-eva-orange hover:bg-eva-orange text-eva-orange hover:text-black transition-all flex items-center gap-2 group"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5" />
+            <span className="text-xs font-bold uppercase tracking-widest hidden md:inline">Back to Command</span>
           </button>
           <div>
-            <h1 className="text-4xl font-bold tracking-tighter mono flex items-center gap-4">
-              <Brain className="w-8 h-8 text-eva-orange" />
-              NEURAL ASSESSMENT LAB // MAGI CORE
+            <h1 className="text-3xl md:text-4xl font-black tracking-tighter flex items-center gap-4 text-eva-orange uppercase">
+              <Brain className="w-8 h-8" />
+              Neural Lab // Magi Core
             </h1>
-            <p className="text-eva-orange mono text-[10px] uppercase tracking-widest mt-1">Status: Operational // Unauthorized access strictly prohibited</p>
+            <p className="text-[10px] text-eva-orange/60 uppercase tracking-[0.4em] mt-1 font-bold">Terminal Dogma - Authorized Access Only</p>
           </div>
         </div>
-        <div className="flex gap-4 mono text-[10px]">
-          <div className="p-3 border border-eva-purple text-eva-purple bg-eva-purple/5 flex flex-col items-center min-w-[100px]">
-            <span className="opacity-50">MELCHIOR-1</span>
-            <span className="text-lg font-bold">YES</span>
-          </div>
-          <div className="p-3 border border-eva-purple text-eva-purple bg-eva-purple/5 flex flex-col items-center min-w-[100px]">
-            <span className="opacity-50">BALTHAZAR-2</span>
-            <span className="text-lg font-bold">YES</span>
-          </div>
-          <div className="p-3 border border-eva-orange text-eva-orange bg-eva-orange/5 flex flex-col items-center min-w-[100px]">
-            <span className="opacity-50">CASPER-3</span>
-            <span className="text-lg font-bold animate-pulse">SYNCING</span>
-          </div>
+        
+        {/* Status Indicators */}
+        <div className="flex gap-4">
+           {['Melchior', 'Balthazar', 'Casper'].map((core, i) => (
+             <div key={core} className="flex flex-col items-center p-2 border border-eva-purple bg-eva-purple/5 min-w-[80px]">
+                <span className="text-[8px] opacity-50 uppercase">{core}</span>
+                <span className="text-sm font-bold text-eva-purple">{i === 2 && isSyncing ? 'BUSY' : 'READY'}</span>
+             </div>
+           ))}
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 relative z-10">
+      {/* Main Lab Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 flex-grow relative z-10">
         
-        {/* Left Column - Diagnostics */}
-        <div className="lg:col-span-8 space-y-12">
-          
+        {/* Input Zones */}
+        <div className="lg:col-span-8 space-y-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Tool 1: Project Feasibility */}
-            <div className="p-8 border-2 border-eva-purple/30 bg-black/60 relative group hover:border-eva-purple/60 transition-all shadow-[0_0_30px_rgba(127,0,255,0.05)]">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 bg-eva-purple/20 flex items-center justify-center border border-eva-purple">
-                  <Target className="text-eva-purple" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold tracking-tight">Feasibility Predictor</h3>
-                  <p className="text-[10px] mono text-eva-purple/60">STRATEGIC PLANNING UNIT</p>
-                </div>
+            
+            {/* Project Analysis Box */}
+            <div className="border-2 border-eva-purple/20 bg-black/60 p-6 flex flex-col space-y-4 hover:border-eva-purple/50 transition-all">
+              <div className="flex items-center gap-3 border-b border-eva-purple/20 pb-4">
+                <Target className="w-5 h-5 text-eva-purple" />
+                <h3 className="text-lg font-bold uppercase tracking-widest">Project Feasibility</h3>
               </div>
-
               <textarea 
                 value={projectInput}
                 onChange={(e) => setProjectInput(e.target.value)}
-                placeholder="INPUT PROJECT DATA..."
-                className="w-full h-32 bg-black/80 border border-eva-purple/30 p-4 text-sm mono text-eva-purple outline-none focus:border-eva-purple transition-all mb-4 placeholder:opacity-20"
+                placeholder="DESCRIBE MISSION PARAMETERS..."
+                className="flex-grow min-h-[120px] bg-black border border-eva-purple/20 p-4 text-xs text-eva-purple focus:border-eva-purple outline-none resize-none placeholder:opacity-20"
               />
-
               <button 
                 onClick={analyzeProject}
                 disabled={isAnalyzing}
-                className="w-full py-4 bg-eva-purple text-black font-bold uppercase tracking-widest hover:bg-eva-green transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(127,0,255,0.2)]"
+                className="w-full py-4 bg-eva-purple text-black font-black uppercase text-xs tracking-[0.2em] hover:bg-eva-green transition-all disabled:opacity-50"
               >
-                {isAnalyzing ? <Activity className="animate-spin" /> : <ShieldAlert className="w-5 h-5" />}
-                {isAnalyzing ? 'Processing...' : 'Execute Analysis'}
+                {isAnalyzing ? 'Processing...' : 'Calculate Strategy'}
               </button>
             </div>
 
-            {/* Tool 2: Sync Diagnostic */}
-            <div className="p-8 border-2 border-eva-orange/30 bg-black/60 relative group hover:border-eva-orange/60 transition-all shadow-[0_0_30px_rgba(255,107,0,0.05)]">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 bg-eva-orange/20 flex items-center justify-center border border-eva-orange">
-                  <Zap className="text-eva-orange" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold tracking-tight">Neural Diagnostic</h3>
-                  <p className="text-[10px] mono text-eva-orange/60">HARMONY RATIO UNIT</p>
-                </div>
+            {/* Sync Diagnostic Box */}
+            <div className="border-2 border-eva-orange/20 bg-black/60 p-6 flex flex-col space-y-4 hover:border-eva-orange/50 transition-all">
+              <div className="flex items-center gap-3 border-b border-eva-orange/20 pb-4">
+                <Zap className="w-5 h-5 text-eva-orange" />
+                <h3 className="text-lg font-bold uppercase tracking-widest">Sync Diagnostic</h3>
               </div>
-
-              <input 
+              <textarea 
                 value={syncInput}
                 onChange={(e) => setSyncInput(e.target.value)}
-                placeholder="ENTER PILOT MENTAL STATE..."
-                className="w-full bg-black/80 border border-eva-orange/30 p-4 text-sm mono text-eva-orange outline-none focus:border-eva-orange transition-all mb-4 placeholder:opacity-20"
+                placeholder="INPUT PILOT MENTAL WAVEFORM..."
+                className="flex-grow min-h-[120px] bg-black border border-eva-orange/20 p-4 text-xs text-eva-orange focus:border-eva-orange outline-none resize-none placeholder:opacity-20"
               />
-
               <button 
                 onClick={calculateSync}
                 disabled={isSyncing}
-                className="w-full py-4 bg-eva-orange text-black font-bold uppercase tracking-widest hover:bg-white transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(255,107,0,0.2)]"
+                className="w-full py-4 bg-eva-orange text-black font-black uppercase text-xs tracking-[0.2em] hover:bg-white transition-all disabled:opacity-50"
               >
-                {isSyncing ? <Activity className="animate-spin" /> : <Cpu className="w-5 h-5" />}
-                {isSyncing ? 'Calculating...' : 'Start Calibration'}
+                {isSyncing ? 'Calibrating...' : 'Sync Pilot Link'}
               </button>
             </div>
           </div>
 
-          {/* Results Area */}
-          {(projectResult || syncResult) && (
-            <div className="p-8 border border-eva-green/30 bg-eva-green/5 space-y-8 animate-in fade-in duration-700">
-              {projectResult && (
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-eva-green mono text-xs font-bold uppercase border-b border-eva-green/20 pb-2">
-                    <Layers className="w-4 h-4" /> Strategic Assessment Log
+          {/* Results Screen */}
+          <div className="border border-white/10 bg-[#050505] min-h-[250px] p-6 relative overflow-hidden">
+             <div className="absolute top-0 left-0 w-full h-1 bg-eva-orange animate-pulse"></div>
+             <div className="flex items-center gap-2 mb-4 text-[10px] uppercase font-bold text-gray-500">
+                <Terminal className="w-3 h-3" /> System Output Log // Level 08 Access
+             </div>
+             
+             {!projectResult && !syncResult && (
+               <div className="flex items-center justify-center h-full opacity-10">
+                  <Cpu className="w-20 h-20" />
+               </div>
+             )}
+
+             <div className="space-y-6">
+                {projectResult && (
+                  <div className="animate-in slide-in-from-left duration-500">
+                    <span className="text-[10px] text-eva-purple block mb-1">STRATEGIC REPORT:</span>
+                    <p className="text-xs leading-relaxed text-gray-300 whitespace-pre-wrap pl-4 border-l-2 border-eva-purple">{projectResult}</p>
                   </div>
-                  <div className="text-sm text-gray-300 leading-relaxed mono whitespace-pre-wrap pl-4 border-l-2 border-eva-green">
-                    {projectResult}
+                )}
+                {syncResult && (
+                  <div className="animate-in slide-in-from-right duration-500">
+                    <span className="text-[10px] text-eva-orange block mb-1">HARMONY ANALYSIS:</span>
+                    <p className="text-xs leading-relaxed text-gray-300 whitespace-pre-wrap pl-4 border-l-2 border-eva-orange">{syncResult}</p>
                   </div>
-                </div>
-              )}
-              {syncResult && (
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-eva-orange mono text-xs font-bold uppercase border-b border-eva-orange/20 pb-2">
-                    <ActivityIcon className="w-4 h-4" /> Neural Harmony Log
-                  </div>
-                  <div className="text-sm text-gray-300 leading-relaxed mono whitespace-pre-wrap pl-4 border-l-2 border-eva-orange">
-                    {syncResult}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+                )}
+             </div>
+          </div>
         </div>
 
-        {/* Right Column - Status Monitors */}
-        <div className="lg:col-span-4 space-y-8">
-          <div className="p-6 border border-eva-purple/20 bg-black/40">
-            <h4 className="mono text-xs font-bold text-eva-purple uppercase mb-4 flex items-center gap-2">
-              <Database className="w-4 h-4" /> System Load
-            </h4>
-            <div className="space-y-4">
-              {[
-                { label: 'CPU Usage', val: '78%', color: 'bg-eva-purple' },
-                { label: 'Memory Bank', val: '92%', color: 'bg-eva-orange' },
-                { label: 'Sync Depth', val: '450m', color: 'bg-eva-green' }
-              ].map(stat => (
-                <div key={stat.label}>
-                  <div className="flex justify-between mono text-[10px] mb-1">
-                    <span>{stat.label}</span>
-                    <span>{stat.val}</span>
-                  </div>
-                  <div className="h-1 bg-white/5 w-full">
-                    <div className={`h-full ${stat.color} transition-all duration-1000`} style={{ width: stat.val.includes('m') ? '80%' : stat.val }}></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="aspect-square bg-black border border-eva-orange/20 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,107,0,0.1)_0%,transparent_70%)] group-hover:opacity-100 opacity-50 transition-opacity"></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-48 h-48 border border-eva-orange/30 rounded-full animate-[spin_10s_linear_infinite]"></div>
-              <div className="w-32 h-32 border-2 border-dashed border-eva-orange/50 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
-              <div className="absolute text-center mono">
-                <p className="text-[10px] text-eva-orange/60">ACTIVE</p>
-                <p className="text-xl font-bold">MAGI-3</p>
+        {/* Right Column Monitor */}
+        <div className="lg:col-span-4 space-y-6">
+           <div className="p-4 border border-eva-purple/20 bg-eva-purple/5">
+              <h4 className="text-[10px] font-bold uppercase text-eva-purple mb-4">Neural Buffer Status</h4>
+              <div className="space-y-3">
+                 {[1, 2, 3, 4].map(i => (
+                   <div key={i} className="flex gap-1">
+                      {[...Array(12)].map((_, j) => (
+                        <div key={j} className={`h-4 flex-1 ${Math.random() > 0.3 ? 'bg-eva-purple/30' : 'bg-eva-purple animate-pulse'}`}></div>
+                      ))}
+                   </div>
+                 ))}
               </div>
-            </div>
-            {/* Random text noise */}
-            <div className="absolute top-2 left-2 mono text-[8px] text-eva-orange/40 leading-none">
-              QUERY_TYPE: NEURAL_ASSESS<br/>
-              BUFFER: 0x8F4A2<br/>
-              STABILITY: NOMINAL
-            </div>
-          </div>
+           </div>
+
+           <div className="p-6 border border-eva-orange/20 bg-black flex flex-col items-center">
+              <div className="relative w-32 h-32 flex items-center justify-center mb-4">
+                 <div className="absolute inset-0 border border-eva-orange/30 rounded-full animate-[spin_8s_linear_infinite]"></div>
+                 <div className="absolute inset-2 border-2 border-dashed border-eva-orange/40 rounded-full animate-[spin_12s_linear_infinite_reverse]"></div>
+                 <ShieldAlert className="w-8 h-8 text-eva-orange animate-pulse" />
+              </div>
+              <span className="text-[10px] uppercase tracking-widest text-eva-orange">Pattern Blue Check</span>
+              <span className="text-xs font-black mt-1 text-eva-green">NEGATIVE</span>
+           </div>
+
+           <div className="p-4 border border-white/5 bg-black">
+              <p className="text-[9px] text-gray-500 leading-tight">
+                NERV DATA INTERFACE VERSION 3.1.2<br/>
+                USER_ID: PILOT_LYES<br/>
+                ENCRYPTION: QUANTUM_HEX<br/>
+                LOCATION: TOKYO-3 CENTRAL DOGMA
+              </p>
+           </div>
         </div>
       </div>
     </div>

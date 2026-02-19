@@ -1,7 +1,8 @@
 {
-  "name": "Lyes - Evangelion Portfolio",
-  "description": "A futuristic personal portfolio for Lyes inspired by Neon Genesis Evangelion aesthetics, featuring a MAGI-inspired AI consultant.",
+  "name": "Lyes // Nerv Technical Protocol",
+  "description": "Portfolio haut de gamme inspiré de Neon Genesis Evangelion. Architecture de systèmes et IA intégrée MAGI.",
   "requestFramePermissions": [
+    "camera",
     "microphone"
   ]
 }
