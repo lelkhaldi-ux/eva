@@ -8,7 +8,7 @@ const MagiSystem: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     { 
       role: 'model', 
-      text: 'MAGI SYSTEM INITIALIZED. NEURAL LINK ESTABLISHED. STANDING BY FOR COMMANDS, PILOT LYES.', 
+      text: 'MAGI SYSTEM INITIALIZED. LOCAL CORE ACTIVE. STANDING BY FOR INTERNAL COMMANDS, PILOT LYES.', 
       timestamp: new Date() 
     }
   ]);
@@ -43,10 +43,10 @@ const MagiSystem: React.FC = () => {
         <div className="bg-eva-purple/20 p-4 border-b border-eva-purple/40 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Cpu className="w-5 h-5 text-eva-purple" />
-            <span className="mono text-eva-purple font-bold tracking-widest text-sm uppercase font-mono">Magi System — Online</span>
+            <span className="mono text-eva-purple font-bold tracking-widest text-sm uppercase font-mono">Magi System — Local Simulation</span>
           </div>
           <div className="flex gap-1">
-            <div className="w-3 h-3 bg-red-500/50 rounded-full"></div>
+            <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
             <div className="w-3 h-3 bg-yellow-500/50 rounded-full"></div>
             <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#39ff14]"></div>
           </div>
@@ -75,7 +75,7 @@ const MagiSystem: React.FC = () => {
           {isTyping && (
             <div className="flex items-start">
               <div className="bg-eva-purple/5 border border-eva-purple/30 text-eva-purple p-4 rounded-sm">
-                <p className="text-xs animate-pulse">MAGI INTERFACE: PROCESSING DATA STREAM...</p>
+                <p className="text-xs animate-pulse">INTERNAL CALCULATION (MELCHIOR-1)...</p>
               </div>
             </div>
           )}
@@ -89,7 +89,7 @@ const MagiSystem: React.FC = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="ENTER COMMAND PROTOCOL..."
+              placeholder="ENTER LOCAL COMMAND..."
               className="w-full bg-black border border-eva-purple/30 text-eva-purple p-3 pr-12 rounded-sm focus:outline-none focus:border-eva-green font-mono placeholder:opacity-30"
             />
             <button 
@@ -100,8 +100,8 @@ const MagiSystem: React.FC = () => {
             </button>
           </div>
           <div className="mt-2 flex justify-between px-1">
-             <span className="text-[10px] font-mono text-eva-green font-bold uppercase">Status: Connected</span>
-             <span className="text-[10px] font-mono text-eva-purple uppercase tracking-widest">Secure Link // Level 08</span>
+             <span className="text-[10px] font-mono text-eva-green font-bold uppercase">Status: Offline Stable</span>
+             <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Local Buffer Mode</span>
           </div>
         </div>
       </div>
