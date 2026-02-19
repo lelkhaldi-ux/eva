@@ -8,7 +8,7 @@ const MagiSystem: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     { 
       role: 'model', 
-      text: 'MAGI SYSTEM INITIALIZED. MELCHIOR, BALTHAZAR, AND CASPER ARE IN AGREEMENT. PROCEED WITH INQUIRY, PILOT.', 
+      text: 'MAGI SYSTEM INITIALIZED. LOCAL CORE ACTIVE. STANDING BY FOR COMMANDS, PILOT.', 
       timestamp: new Date() 
     }
   ]);
@@ -43,12 +43,12 @@ const MagiSystem: React.FC = () => {
         <div className="bg-eva-purple/20 p-4 border-b border-eva-purple/40 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Cpu className="w-5 h-5 text-eva-purple" />
-            <span className="mono text-eva-purple font-bold tracking-widest text-sm">MAGI SYSTEM - BATTLE SIMULATION UNIT</span>
+            <span className="mono text-eva-purple font-bold tracking-widest text-sm uppercase">Magi System — Local Simulation Mode</span>
           </div>
           <div className="flex gap-1">
-            <div className="w-3 h-3 bg-red-500/50 rounded-full animate-pulse"></div>
+            <div className="w-3 h-3 bg-red-500/50 rounded-full"></div>
             <div className="w-3 h-3 bg-yellow-500/50 rounded-full"></div>
-            <div className="w-3 h-3 bg-green-500/50 rounded-full"></div>
+            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#39ff14]"></div>
           </div>
         </div>
 
@@ -75,7 +75,7 @@ const MagiSystem: React.FC = () => {
           {isTyping && (
             <div className="flex items-start">
               <div className="bg-eva-purple/5 border border-eva-purple/30 text-eva-purple p-4 rounded-sm">
-                <p className="text-xs animate-pulse">CONSULTING MAGI CORES (MELCHIOR-1)...</p>
+                <p className="text-xs animate-pulse">INTERNAL CALCULATION (MELCHIOR-1)...</p>
               </div>
             </div>
           )}
@@ -89,7 +89,7 @@ const MagiSystem: React.FC = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="ENTER COMMAND OR DATA QUERY..."
+              placeholder="ENTER LOCAL COMMAND..."
               className="w-full bg-black border border-eva-purple/30 text-eva-purple p-3 pr-12 rounded-sm focus:outline-none focus:border-eva-green mono placeholder:opacity-30"
             />
             <button 
@@ -100,8 +100,8 @@ const MagiSystem: React.FC = () => {
             </button>
           </div>
           <div className="mt-2 flex justify-between px-1">
-             <span className="text-[10px] mono text-gray-500">SYSTEM: STABLE</span>
-             <span className="text-[10px] mono text-gray-500">ENCRYPTION: LEVEL 10</span>
+             <span className="text-[10px] mono text-eva-green">CORE: OFFLINE STABLE</span>
+             <span className="text-[10px] mono text-gray-500 uppercase">Local Database Only</span>
           </div>
         </div>
       </div>
