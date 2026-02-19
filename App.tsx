@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
-import Layout from './components/Layout';
-import MagiSystem from './components/MagiSystem';
-import HangarPage from './components/HangarPage';
-import AiLab from './components/AiLab';
-import MagiFloatingBot from './components/MagiFloatingBot';
-import { PROJECTS, HERO_IMAGE } from './constants';
+import Layout from './components/Layout.tsx';
+import MagiSystem from './components/MagiSystem.tsx';
+import HangarPage from './components/HangarPage.tsx';
+import AiLab from './components/AiLab.tsx';
+import MagiFloatingBot from './components/MagiFloatingBot.tsx';
+import { PROJECTS, HERO_IMAGE } from './constants.tsx';
 import { ShieldAlert, Activity, ChevronDown, LayoutGrid, Brain, Target, Lock } from 'lucide-react';
 
 type Page = 'HOME' | 'HANGAR' | 'NEURAL_LAB';
@@ -30,7 +30,6 @@ const App: React.FC = () => {
     }, 1200);
   };
 
-  // Syncing State during page transitions
   if (isSyncing) {
     return (
       <div className="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center text-eva-purple p-12 fade-in">
@@ -72,11 +71,11 @@ const App: React.FC = () => {
 
             <div className="container mx-auto px-6 relative z-10 text-center md:text-left">
               <div className="flex flex-col md:flex-row items-center gap-12">
-                <div className="flex-1 space-y-6">
+                <div className="flex-1 space-y-6 text-white">
                   <div className="inline-flex items-center gap-2 px-3 py-1 bg-eva-orange/20 border border-eva-orange text-eva-orange font-mono text-xs uppercase tracking-widest font-bold animate-pulse">
                     <Lock className="w-4 h-4" /> Pilot Lyes Authorized
                   </div>
-                  <h1 className="text-6xl md:text-8xl font-bold tracking-tighter leading-none text-white font-sans">
+                  <h1 className="text-6xl md:text-8xl font-bold tracking-tighter leading-none font-sans">
                     LYES <br />
                     <span className="text-eva-purple opacity-80 uppercase">Protocol 01</span>
                   </h1>
@@ -101,7 +100,7 @@ const App: React.FC = () => {
 
                 <div className="hidden lg:block flex-shrink-0 relative w-80 h-80">
                   <div className="absolute inset-0 border-4 border-dashed border-eva-purple/30 rounded-full animate-[spin_20s_linear_infinite]"></div>
-                  <div className="absolute inset-4 border-2 border-eva-green/20 rounded-full animate-[spin_10s_linear_infinite_reverse]"></div>
+                  <div className="absolute inset-4 border-2 border-dashed border-eva-green/20 rounded-full animate-[spin_10s_linear_infinite_reverse]"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
                      <div className="text-center font-mono">
                         <div className="text-5xl font-bold text-eva-green">01</div>
@@ -121,7 +120,7 @@ const App: React.FC = () => {
           <section id="projects" className="py-24 px-6 bg-black border-t border-eva-purple/10">
             <div className="container mx-auto">
               <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
+                <div className="text-white">
                   <div className="flex items-center gap-2 text-eva-green mb-2">
                     <Target className="w-5 h-5" />
                     <span className="font-mono text-sm uppercase tracking-[0.3em]">Combat Logs</span>

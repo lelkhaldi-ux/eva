@@ -1,14 +1,14 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Terminal, Send, Cpu, MessageSquare } from 'lucide-react';
-import { magiService } from '../services/geminiService';
-import { Message } from '../types';
+import { magiService } from '../services/geminiService.ts';
+import { Message } from '../types.ts';
 
 const MagiSystem: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     { 
       role: 'model', 
-      text: 'MAGI SYSTEM INITIALIZED. LOCAL CORE ACTIVE. STANDING BY FOR COMMANDS, PILOT.', 
+      text: 'MAGI SYSTEM INITIALIZED. NEURAL LINK ESTABLISHED. STANDING BY FOR COMMANDS, PILOT LYES.', 
       timestamp: new Date() 
     }
   ]);
@@ -43,7 +43,7 @@ const MagiSystem: React.FC = () => {
         <div className="bg-eva-purple/20 p-4 border-b border-eva-purple/40 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Cpu className="w-5 h-5 text-eva-purple" />
-            <span className="mono text-eva-purple font-bold tracking-widest text-sm uppercase">Magi System — Local Simulation Mode</span>
+            <span className="mono text-eva-purple font-bold tracking-widest text-sm uppercase font-mono">Magi System — Online</span>
           </div>
           <div className="flex gap-1">
             <div className="w-3 h-3 bg-red-500/50 rounded-full"></div>
@@ -55,7 +55,7 @@ const MagiSystem: React.FC = () => {
         {/* Chat Area */}
         <div 
           ref={scrollRef}
-          className="h-[500px] overflow-y-auto p-6 space-y-6 mono scrollbar-hide"
+          className="h-[500px] overflow-y-auto p-6 space-y-6 font-mono scrollbar-hide"
         >
           {messages.map((msg, idx) => (
             <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
@@ -75,7 +75,7 @@ const MagiSystem: React.FC = () => {
           {isTyping && (
             <div className="flex items-start">
               <div className="bg-eva-purple/5 border border-eva-purple/30 text-eva-purple p-4 rounded-sm">
-                <p className="text-xs animate-pulse">INTERNAL CALCULATION (MELCHIOR-1)...</p>
+                <p className="text-xs animate-pulse">MAGI INTERFACE: PROCESSING DATA STREAM...</p>
               </div>
             </div>
           )}
@@ -89,8 +89,8 @@ const MagiSystem: React.FC = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="ENTER LOCAL COMMAND..."
-              className="w-full bg-black border border-eva-purple/30 text-eva-purple p-3 pr-12 rounded-sm focus:outline-none focus:border-eva-green mono placeholder:opacity-30"
+              placeholder="ENTER COMMAND PROTOCOL..."
+              className="w-full bg-black border border-eva-purple/30 text-eva-purple p-3 pr-12 rounded-sm focus:outline-none focus:border-eva-green font-mono placeholder:opacity-30"
             />
             <button 
               onClick={handleSend}
@@ -100,8 +100,8 @@ const MagiSystem: React.FC = () => {
             </button>
           </div>
           <div className="mt-2 flex justify-between px-1">
-             <span className="text-[10px] mono text-eva-green">CORE: OFFLINE STABLE</span>
-             <span className="text-[10px] mono text-gray-500 uppercase">Local Database Only</span>
+             <span className="text-[10px] font-mono text-eva-green font-bold uppercase">Status: Connected</span>
+             <span className="text-[10px] font-mono text-eva-purple uppercase tracking-widest">Secure Link // Level 08</span>
           </div>
         </div>
       </div>
