@@ -5,8 +5,8 @@ import MagiSystem from './components/MagiSystem';
 import HangarPage from './components/HangarPage';
 import AiLab from './components/AiLab';
 import MagiFloatingBot from './components/MagiFloatingBot';
-import { PROJECTS, SKILLS, HERO_IMAGE } from './constants';
-import { Target, ShieldAlert, Cpu, Zap, Activity, ChevronDown, LayoutGrid, Brain } from 'lucide-react';
+import { PROJECTS, HERO_IMAGE } from './constants';
+import { ShieldAlert, Activity, ChevronDown, LayoutGrid, Brain, Target, Lock } from 'lucide-react';
 
 type Page = 'HOME' | 'HANGAR' | 'NEURAL_LAB';
 
@@ -30,6 +30,7 @@ const App: React.FC = () => {
     }, 1200);
   };
 
+  // Syncing State during page transitions
   if (isSyncing) {
     return (
       <div className="fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center text-eva-purple p-12 fade-in">
@@ -73,7 +74,7 @@ const App: React.FC = () => {
               <div className="flex flex-col md:flex-row items-center gap-12">
                 <div className="flex-1 space-y-6">
                   <div className="inline-flex items-center gap-2 px-3 py-1 bg-eva-orange/20 border border-eva-orange text-eva-orange font-mono text-xs uppercase tracking-widest font-bold animate-pulse">
-                    <ShieldAlert className="w-4 h-4" /> Pilot Lyes Authorized
+                    <Lock className="w-4 h-4" /> Pilot Lyes Authorized
                   </div>
                   <h1 className="text-6xl md:text-8xl font-bold tracking-tighter leading-none text-white font-sans">
                     LYES <br />

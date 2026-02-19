@@ -3,11 +3,9 @@ import { GoogleGenAI } from "@google/genai";
 import { MAGI_SYSTEM_INSTRUCTION } from "../constants";
 
 export class MagiService {
-  private ai: GoogleGenAI;
-
-  constructor() {
-    // Initializing with the named parameter and process.env.API_KEY as per guidelines
-    this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  // We recreate the AI instance to ensure it uses the latest API key from process.env.API_KEY
+  private getAI() {
+    return new GoogleGenAI({ apiKey: process.env.API_KEY });
   }
 
   async queryMagi(prompt: string, context: 'GENERAL' | 'PROJECT' | 'SYNC' = 'GENERAL') {
@@ -20,20 +18,27 @@ export class MagiService {
     }
 
     try {
-      const response = await this.ai.models.generateContent({
-        model: 'gemini-3-flash-preview',
+      const ai = this.getAI();
+      const response = await ai.models.generateContent({
+        model: 'gemini-3-pro-preview',
         contents: prompt,
         config: {
           systemInstruction: systemInstruction,
-          temperature: 0.8,
+          temperature: 0.7,
+          thinkingConfig: { thinkingBudget: 2000 } // Adding some thinking budget for deeper analysis
         },
       });
 
-      // Using .text property directly as per the extracted response property definition
       return response.text || "SYSTEM ERROR: DATA STREAM INTERRUPTED.";
-    } catch (error) {
+    } catch (error: any) {
       console.error("MAGI Error:", error);
-      return "CRITICAL ERROR: CORE OVERLOAD. PLEASE PURGE LCL TANKS.";
+      
+      // Handle the "Requested entity was not found" error by suggesting re-auth
+      if (error.message && error.message.includes("not found")) {
+        return "CRITICAL ERROR: API KEY NOT FOUND OR INVALID. PLEASE RE-AUTHORIZE IN TERMINAL DOGMA.";
+      }
+      
+      return "CRITICAL ERROR: CORE OVERLOAD. PLEASE PURGE LCL TANKS AND CHECK API AUTHORIZATION.";
     }
   }
 }
