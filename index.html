@@ -22,102 +22,85 @@
                     fontFamily: {
                         sans: ['Rajdhani', 'sans-serif'],
                         mono: ['Share Tech Mono', 'monospace'],
-                    },
-                    animation: {
-                        'scanline': 'scanline 6s linear infinite',
-                        'glitch': 'glitch 0.3s cubic-bezier(.25,.46,.45,.94) both infinite',
                     }
                 }
             }
         }
     </script>
     <style type="text/css">
-        @tailwind base;
-        @tailwind components;
-        @tailwind utilities;
-
+        /* Base Styles */
         body {
             background-color: #050505;
             color: #e2e2e2;
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
             min-height: 100vh;
         }
 
+        /* NERV Grid Overlay */
         .nerv-grid {
             background-image: linear-gradient(rgba(127, 0, 255, 0.05) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(127, 0, 255, 0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
+            background-size: 40px 40px;
             background-attachment: fixed;
         }
 
+        /* Animated Scanline */
         .scanline {
             width: 100%;
             height: 100px;
-            z-index: 10;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(57, 255, 20, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
-            opacity: 0.1;
+            z-index: 9999;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(57, 255, 20, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
             position: fixed;
             top: -100px;
             pointer-events: none;
-            animation: scanline 8s linear infinite;
+            animation: scanlineMove 10s linear infinite;
         }
 
-        @keyframes scanline {
+        @keyframes scanlineMove {
             0% { transform: translateY(0); }
             100% { transform: translateY(calc(100vh + 100px)); }
         }
 
+        /* Custom Transitions for "isSyncing" state */
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .glitch-hover:hover {
-            animation: glitch 0.3s cubic-bezier(.25,.46,.45,.94) both infinite;
+            animation: glitchEffect 0.2s linear infinite;
         }
 
-        @keyframes glitch {
+        @keyframes glitchEffect {
             0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
+            25% { transform: translate(-2px, 1px); }
+            50% { transform: translate(2px, -1px); }
+            75% { transform: translate(-1px, -1px); }
+            100% { transform: translate(1px, 1px); }
         }
 
-        /* Hide scrollbar for Chrome, Safari and Opera */
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #7f00ff; }
+        ::-webkit-scrollbar-thumb:hover { background: #39ff14; }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #050505;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #7f00ff;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #39ff14;
-        }
-
-        /* Fix for potential black screen on transitions */
-        #root {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+        #root { min-height: 100vh; }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "@google/genai": "https://esm.sh/@google/genai@^1.42.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react": "https://esm.sh/react@^19.2.4",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.575.0"
-  }
-}
-</script>
+    <script type="importmap">
+    {
+      "imports": {
+        "@google/genai": "https://esm.sh/@google/genai@^1.42.0",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+        "react": "https://esm.sh/react@^19.2.4",
+        "react/": "https://esm.sh/react@^19.2.4/",
+        "lucide-react": "https://esm.sh/lucide-react@^0.575.0"
+      }
+    }
+    </script>
 </head>
 <body class="nerv-grid font-sans">
     <div class="scanline"></div>
