@@ -1,0 +1,7 @@
+{
+  "name": "Lyes - Evangelion Portfolio",
+  "description": "A futuristic personal portfolio for Lyes inspired by Neon Genesis Evangelion aesthetics, featuring a MAGI-inspired AI consultant.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
